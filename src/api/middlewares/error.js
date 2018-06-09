@@ -37,7 +37,7 @@ exports.converter = (err, req, res, next) => {
 
   if (err instanceof expressValidation.ValidationError) {
     convertedError = new APIError({
-      message: 'Invalid Data',
+      message: 'Invalid API Request',
       errors: err.errors,
       status: err.status,
       stack: err.stack,

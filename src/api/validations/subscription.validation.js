@@ -8,17 +8,22 @@ const schema = {
     Joi.object(
       {
         productId: Joi.string().required(),
-        quantity: Joi.number().required(),
+        quantity: Joi.number().min(0).invalid(0).required(),
         unitId: Joi.string().required(),
       }
     )
-  ).min(1)
+  ).min(1),
+  query_skip: Joi.number().integer().min(0).default(0),
+  query_limit: Joi.number().integer().min(1).max(1000),
 }
 
 module.exports = {
 
   listAll: {
-    // No validation
+    query: {
+      skip: schema.query_skip,
+      limit: schema.query_limit      
+    }
   },
 
   create: {

@@ -9,7 +9,7 @@ exports.load = async (req, res, next, id) => {
     req.locals = { entity };
     return next();
   } catch (error) {
-    return errorHandler(error, req, res);
+    next(error);
   }
 };
 
@@ -22,7 +22,7 @@ exports.create = async (req, res, next) => {
     res.status(httpStatus.CREATED);
     res.json(savedEntity.transform());
   } catch (error) {
-    next(error);
+    next(error);  
   }
 };
 

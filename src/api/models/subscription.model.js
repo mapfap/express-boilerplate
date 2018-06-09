@@ -113,21 +113,17 @@ subscriptionSchema.statics = {
   },
 
   /**
-   * List subscriptions in descending order of 'createdAt' timestamp.
+   * List entities in descending order of 'createdAt' timestamp.
    *
-   * @param {number} skip - Number of objects to be skipped.
-   * @param {number} limit - Limit number of objects to be returned.
+   * @param {number} skip - Number of entities to be skipped.
+   * @param {number} limit - Limit number of entities to be returned.
    * @returns {Promise<Subscription[]>}
    */
-  list({
-    page = 1, perPage = 1000, name, email, role,
-  }) {
-    const options = omitBy({ name }, isNil);
-
-    return this.find(options)
+  list({ skip = 0, limit = 1000 }) {
+    return this.find()
       .sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
-      .limit(perPage)
+      .skip(skip)
+      .limit(limit)
       .exec();
   }
 
