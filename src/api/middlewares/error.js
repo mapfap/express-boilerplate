@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const expressValidation = require('express-validation');
 const APIError = require('../utils/APIError');
 const { env } = require('../../config/vars');
+const logger = require('../../config/logger')
 
 /**
  * Error handler. Send stacktrace only during development
@@ -14,6 +15,8 @@ const handler = (err, req, res, next) => {
     errors: err.errors,
     stack: err.stack,
   };
+
+  logger.error(response);
 
   if (env !== 'development') {
     delete response.stack;
@@ -34,7 +37,7 @@ exports.converter = (err, req, res, next) => {
 
   if (err instanceof expressValidation.ValidationError) {
     convertedError = new APIError({
-      message: 'Erro de Validação',
+      message: 'Invalid Data',
       errors: err.errors,
       status: err.status,
       stack: err.stack,
