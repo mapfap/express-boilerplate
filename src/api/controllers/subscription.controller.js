@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
 const Entity = require('../models/subscription.model');
-const { handler: errorHandler } = require('../middlewares/error');
 
 exports.load = async (req, res, next, id) => {
   try {
@@ -13,14 +12,14 @@ exports.load = async (req, res, next, id) => {
   }
 };
 
-exports.getById = (req, res) => res.json(req.locals.entity.transform());
+exports.getById = (req, res) => res.json(req.locals.entity);
 
 exports.create = async (req, res, next) => {
   try {
     const entity = new Entity(omit(req.body, ['_id', 'createdAt', 'updatedAt']));
     const savedEntity = await entity.save();
     res.status(httpStatus.CREATED);
-    res.json(savedEntity.transform());
+    res.json(savedEntity);
   } catch (error) {
     next(error);  
   }
@@ -32,7 +31,7 @@ exports.patchById = async (req, res, next) => {
     const entity = Object.assign(req.locals.entity, updatedEntity);
 
     const savedEntity = await entity.save();
-    res.json(savedEntity.transform());
+    res.json(savedEntity);
   } catch (error) {
     next(error);
   }
@@ -41,8 +40,7 @@ exports.patchById = async (req, res, next) => {
 exports.listAll = async (req, res, next) => {
   try {
     const entities = await Entity.list(req.query);
-    const transformedEntities = entities.map(entity => entity.transform());
-    res.json(transformedEntities);
+    res.json(entities);
   } catch (error) {
     next(error);
   }

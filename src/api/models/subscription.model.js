@@ -1,14 +1,6 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const { omitBy, isNil } = require('lodash');
-const uuidv4 = require('uuid/v4');
 const APIError = require('../utils/APIError');
-const { env } = require('../../config/vars');
-
-/**
-* Subscription Statuses
-*/
-const statuses = ['activated', 'deactivated', 'cancelled'];
 
 const itemSchema = new mongoose.Schema({
   productId: {
@@ -26,14 +18,8 @@ const itemSchema = new mongoose.Schema({
     maxlength: 128,
     trim: false
   }
-}, {
-  _id: false
-});
+}, { _id: false });
 
-/**
- * Subscription Schema
- * @private
- */
 const subscriptionSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -44,58 +30,15 @@ const subscriptionSchema = new mongoose.Schema({
   items: {
     type: [itemSchema]
   }
-}, {
-  timestamps: true,
-});
-
-/**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
- */
-subscriptionSchema.pre('save', async function save(next) {
-  try {
-    return next();
-  } catch (error) {
-    return next(error);
+  }, {
+    timestamps: true,
   }
-});
+);
 
-/**
- * Methods
- */
-subscriptionSchema.method({
-  transform() {
-    const transformed = {};
-    const fields = ['_id', 'name', 'items', 'createdAt', 'updatedAt' ];
-
-    fields.forEach((field) => {
-      transformed[field] = this[field];
-    });
-
-    return transformed;
-  },
-
-});
-
-/**
- * Statics
- */
 subscriptionSchema.statics = {
-
-  statuses,
-
-  /**
-   * Get subscription
-   *
-   * @param {ObjectId} id - The id of subscrption.
-   * @returns {Promise<Subscription, APIError>}
-   */
   async get(id) {
     try {
       let subscription;
-
       if (mongoose.Types.ObjectId.isValid(id)) {
         subscription = await this.findById(id).exec();
       }
@@ -112,13 +55,6 @@ subscriptionSchema.statics = {
     }
   },
 
-  /**
-   * List entities in descending order of 'createdAt' timestamp.
-   *
-   * @param {number} skip - Number of entities to be skipped.
-   * @param {number} limit - Limit number of entities to be returned.
-   * @returns {Promise<Subscription[]>}
-   */
   list({ skip = 0, limit = 1000 }) {
     return this.find()
       .sort({ createdAt: -1 })
@@ -126,10 +62,6 @@ subscriptionSchema.statics = {
       .limit(limit)
       .exec();
   }
-
 }
 
-/**
- * @typedef Subscription
- */
 module.exports = mongoose.model('Subscription', subscriptionSchema);
