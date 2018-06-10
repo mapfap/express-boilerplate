@@ -16,8 +16,10 @@ const handler = (err, req, res, next) => {
     stack: err.stack,
   };
 
-  logger.error(response);
-
+  if (response.code === httpStatus.INTERNAL_SERVER_ERROR) {
+    logger.error(response);  
+  }
+  
   if (env !== 'development') {
     delete response.stack;
   }

@@ -5,7 +5,7 @@ const logger = require('./logger')
 mongoose.Promise = Promise;
 
 mongoose.connection.on('error', (err) => {
-  logger.error(`MongoDB connection error: ${err}`);
+  logger.error(`MongoDB connection error: ${JSON.stringify(err)}`);
   process.exit(-1);
 });
 
