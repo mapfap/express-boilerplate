@@ -13,9 +13,9 @@ if (env === 'development') {
   mongoose.set('debug', true);
 }
 
-exports.connect = () => {
-  mongoose.connect(mongo.uri, {
-    keepAlive: 1
-  });
+exports.connect = (next) => {
+  logger.info('connectting to MongoDB..');
+  mongoose.connect(mongo.uri, { keepAlive: 1 });
+  logger.info('MongoDB connected');
   return mongoose.connection;
 };
