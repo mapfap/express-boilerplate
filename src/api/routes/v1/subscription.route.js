@@ -15,10 +15,10 @@ router
   .get(authorize(), validate(listAll), controller.listAll)
   .post(authorize(), validate(create), controller.create);
 
-router
-  .route('/:id')
-  .get(authorize(), validate(getById), controller.getById)
-  .patch(authorize(), validate(patchById), controller.patchById)
-  .delete(authorize(), validate(deleteById), controller.deleteById);
+// router
+//   .route('/:id')
+//   .get(authorize(), validate(getById), controller.getById)
+//   .patch(authorize(), validate(patchById), controller.patchById)
+//   .delete(authorize(), validate(deleteById), controller.deleteById);
 
 module.exports = router;

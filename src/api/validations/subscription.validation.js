@@ -1,15 +1,14 @@
 const Joi = require('joi');
-const Subscription = require('../models/subscription.model');
 
 const schema = {
   id: Joi.string().regex(/^[a-fA-F0-9]{24}$/),
   name: Joi.string(),
-  items: Joi.array().items(
+  products: Joi.array().items(
     Joi.object(
       {
         productId: Joi.string().required(),
         quantity: Joi.number().min(0).invalid(0).required(),
-        unitId: Joi.string().required(),
+        unitOfMeasurement: Joi.string().required(),
       }
     )
   ).min(1),
@@ -29,7 +28,7 @@ module.exports = {
   create: {
     body: {
       name: schema.name.required(),
-      items: schema.items.required()
+      products: schema.products.required()
     }
   },
 
@@ -45,7 +44,7 @@ module.exports = {
     },
     body: {
       name: schema.name,
-      items: schema.items
+      products: schema.products
     }
   },
 

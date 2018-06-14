@@ -7,23 +7,35 @@ const sinon = require('sinon');
 const bcrypt = require('bcryptjs');
 const { some, omitBy, isNil } = require('lodash');
 const app = require('../../../index');
-const Subscription = require('../../models/subscription.model');
 const adminAccessToken = 'eyJhbGciOiJSUzI1NiJ9.eyJkYXRhIjoidGVzdDIifQ.GFgZjxJaL5ZVXanSKZmmNIdWjrzqw84OtoFW15ahg_oDHbzJJIJydX6TWirJhNtlMmhmQaOe5Hfa4rr99vhnl1Okx8dWqCEYxbsTDv2hQ0ZrOGRfwycANoNd2-Yjdb0IjXbqPsKlFCNjIm7yZz7NM96ALRrmZr2IAp2qaZKHzxdivR63sypQ_anYIbxXmyM2v2uhGBMwfeV1FN_ogo29jCQDFuGePrHbSdY_A0-21PD0ezwsuXKWOQGn3ohswnZIpy7nb3HO2dx9Ves2wZkRyyPgAlCq8weIlPw36Vpu42dFkukl7-XBkEHGHLqwCt5b_c0UFO72110pO_VhnvqokA';
+const db = require('../../../../db/models/index');
 
 describe('Subscription API', async () => {
 
   const sampleSubscription1 = {
-    name: "sampleSubscription1",
-    items: [{
-      productId: "111",
-      quantity : 2,
-      unitId : "334"
+    name: "Weekly Diesel",
+    poNumber: "1000020",
+    soldTo: "AMP_101022",
+    shipTo: "AMP_102003",
+    modeOfTransport: "Rail",
+    startDate: "2010-10-09 17:00:00.000 +00:00",
+    endDate: "2012-12-11 17:00:00.000 +00:00",
+    createdAt: "2018-06-14T17:29:29.354Z",
+    updatedAt: "2018-06-14T17:29:29.354Z",
+    products: [{
+      productId: "AMP_100643",
+      quantity: 2,
+      unitOfMeasurement: "Car"
     }]
   }
 
+  before(async () => {
+    
+  });
+
   beforeEach(async () => {
-    await Subscription.remove({});
-    await Subscription.insertMany([sampleSubscription1]);
+    await db.Subscription.destroy({where: {}})
+    await db.Subscription.insert.bulkCreate([sampleSubscription1]);
   });
 
   describe('POST /v1/subscriptions', () => {
